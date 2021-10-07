@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showroom_front/data/entities/user_data.dart';
 
@@ -25,9 +26,19 @@ class SharedPrefsData {
           password: prefs.getString("password") ?? "");
     }
   }
+  static Onboard() async{
+    WidgetsFlutterBinding.ensureInitialized();
+    int out = 0;
+    SharedPreferences test = await SharedPreferences.getInstance();
+    await test.setInt('On', out);
+    print("shared setted ");
 
+  }
   static clearData() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
+    Onboard();
+
+
   }
 }

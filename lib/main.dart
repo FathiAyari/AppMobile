@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:showroom_front/onboardingPage/Onboarding.dart';
 import 'package:showroom_front/splash_screen.dart';
 int isViewed;
+int out;
 Future <void>  main() async {
   SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
@@ -14,10 +15,24 @@ Future <void>  main() async {
       )
   );
   WidgetsFlutterBinding.ensureInitialized();
+/*  WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  await Firebase.initializeApp();
-  isViewed =prefs.getInt('Onboard');
-  print("te");
+
+  isViewed =prefs.getInt('Onboard');*/
+
+
+
+
+    SharedPreferences test = await SharedPreferences.getInstance();
+     out= await test.getInt('On');
+    print("$out done");
+
+
+
+
+
+
+
 
 
   await Firebase.initializeApp();
@@ -25,14 +40,128 @@ Future <void>  main() async {
 }
 
 class MyApp extends StatelessWidget {
+
+
+
+
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
       title: 'Show Room Application',
       theme: ThemeData(
+
         primarySwatch: Colors.blue,
       ),
-      home: isViewed!=0 ?Onboarding():SplashScreen(),
+      home:out!=0?Onboarding():LoginScreen()
+
     );
   }
 }
+
+
+
+
+
+
+
+
+
+class shared extends StatelessWidget {
+
+  void Onboard() async{
+    WidgetsFlutterBinding.ensureInitialized();
+    int out = 0;
+    SharedPreferences test = await SharedPreferences.getInstance();
+    await test.setInt('On', out);
+    print("shared setted ");
+
+  }
+
+  Get() async{
+
+    SharedPreferences test = await SharedPreferences.getInstance();
+   int out= await test.getInt('On');
+    print("$out done");
+
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(child: ElevatedButton(
+        child: Text("click"),
+        onPressed: () async {
+         // await Onboard();
+          await Get();
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginScreen()));
+        },
+      ),),
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+class onboard extends StatefulWidget {
+
+
+  @override
+  _onboardState createState() => _onboardState();
+}
+
+class _onboardState extends State<onboard> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

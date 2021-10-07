@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showroom_front/constants/contants.dart';
 import 'package:showroom_front/data/entities/user_data.dart';
 import 'package:showroom_front/login/login_controller.dart';
@@ -20,6 +21,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+
   LoginController loginController = LoginController();
  StreamSubscription _readUserData;
 
@@ -106,7 +108,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             AppButton(
                               buttonText: "S'authentifier",
-                              onClickHandler: () {
+                              onClickHandler: () async {
+
                                 loginUser(context);
                               },
                             )

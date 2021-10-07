@@ -96,6 +96,7 @@ class _BodyState extends State<Body> {
 
                      onTap: ()async {
 
+                       OnboardingCach();
                        Navigator.pushReplacement(context,
                            MaterialPageRoute(builder: (context) {
                              return LoginScreen();
@@ -121,7 +122,8 @@ class _BodyState extends State<Body> {
                      child: DirectionMethode(controller: _controller,
                          currentPage: currentPage,
                          pages: pages,
-                         press:(currentPage == pages.length - 1 ) ?    ()async{
+                         press:(currentPage == pages.length - 1 ) ?    () async{
+
                            await OnboardingCach();
 
                            Navigator.pushReplacement(context,
@@ -131,7 +133,9 @@ class _BodyState extends State<Body> {
 
 
                          } : ()async{
+
                            await OnboardingCach();
+
                            _controller.nextPage(duration:Duration(milliseconds: 300), curve: Curves.easeInOutQuint);}
 
                      ),

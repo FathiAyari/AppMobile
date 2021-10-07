@@ -11,6 +11,7 @@ import 'package:showroom_front/data/entities/user_data.dart';
 import 'package:showroom_front/login/login_screen.dart';
 import 'package:showroom_front/utils/shared_prefs_data.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:showroom_front/widgets/ShowAlertDialog.dart';
 
 class ShowRoomScreen extends StatefulWidget {
   @override
@@ -48,7 +49,11 @@ class _ShowRoomScreenState extends State<ShowRoomScreen> {
     mediaReference.onValue.listen((event) {
       mediaList.clear();
       timer?.cancel();
-      print(selectedScreenId);
+
+
+      setState(() {
+        select = int.tryParse(selectedScreenId);
+      });
       Map<dynamic, dynamic> map = event.snapshot.value;
       map.forEach((item, value) {
         var media = MediaObject.fromJson(value);
@@ -64,7 +69,7 @@ class _ShowRoomScreenState extends State<ShowRoomScreen> {
 
   _getScreenList() {
     var screenReference =
-        FirebaseDatabase.instance.reference().child("screens");
+    FirebaseDatabase.instance.reference().child("screens");
     screenReference.onValue.listen((event) {
       listScreens.clear();
       Map<dynamic, dynamic> map = event.snapshot.value;
@@ -156,11 +161,11 @@ class _ShowRoomScreenState extends State<ShowRoomScreen> {
                     ),
                     InkWell(
                         onTap: () async {
-                          await logout();
+                          ShowAlertDialog(context);
                         },
                         child: Column(
                           children: [
-                            Icon(Icons.logout_rounded, color: Colors.black),
+                            Icon(Icons.logout, color: Colors.black),
                             Text("Logout",
                                 style: TextStyle(
                                     color: Colors.black,
@@ -177,20 +182,45 @@ class _ShowRoomScreenState extends State<ShowRoomScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  DropdownButton<String>(
-                    items: listScreens.map<DropdownMenuItem<String>>((item) {
-                      return DropdownMenuItem<String>(
-                          child: Text(item.name), value: item.id.toString());
-                    }).toList(),
-                    value: selectedScreenId,
-                    onChanged: (value) {
-                      setState(() {
+                  Container(
+                    width: 200,
+                   decoration: BoxDecoration(
+                     borderRadius: BorderRadius.circular(20),
+                     boxShadow: [
+                       BoxShadow(
+                         color: Colors.black.withOpacity(0.08),
+                         blurRadius: 1,
+                         spreadRadius: 0.0,
+                         offset: Offset(1.0, 2.0), // shadow direction: bottom right
+                       )
+                     ],
 
-                        this.selectedScreenId = value;
-                        select = int.tryParse(value);
 
-                      });
-                    },
+                   ),
+                    child: DropdownButtonHideUnderline(
+                      child: ButtonTheme(
+                        alignedDropdown: true,
+
+                        child: DropdownButton<String>(
+
+                          items: listScreens.map<DropdownMenuItem<String>>((item) {
+                            return DropdownMenuItem<String>(
+
+
+                                child: Text(item.name), value: item.id.toString());
+                          }).toList(),
+                          value: selectedScreenId,
+                          onChanged: (value) {
+                            setState(() {
+
+                              this.selectedScreenId = value;
+                              select = int.tryParse(value);
+
+                            });
+                          },
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -241,7 +271,14 @@ class _ShowRoomScreenState extends State<ShowRoomScreen> {
                                   itemCount: mediaList.length,
                                   itemBuilder: (context, index) {
                                     if ((mediaList[index].screenId == select)) {
-// hey id:3, start:1 ; aa id:4 , start:26
+                                        String mediaTime= (mediaList[index].startTime).split(":")[0] ;
+                                        int singleTime=int.tryParse(mediaTime);
+
+
+
+
+
+
 
                                       return Column(
                                         children: [
@@ -257,14 +294,14 @@ class _ShowRoomScreenState extends State<ShowRoomScreen> {
                                                 Card(
 
                                                   shape:
-                                                      RoundedRectangleBorder(
+                                                  RoundedRectangleBorder(
                                                     side: BorderSide(
                                                         color:
-                                                            Colors.white70,
+                                                        Colors.white70,
                                                         width: 1),
                                                     borderRadius:
-                                                        BorderRadius
-                                                            .circular(10),
+                                                    BorderRadius
+                                                        .circular(10),
                                                   ),
                                                   elevation: 10,
                                                   child: Row(
@@ -285,17 +322,17 @@ class _ShowRoomScreenState extends State<ShowRoomScreen> {
                                                                 child: ClipRRect(
                                                                   borderRadius: BorderRadius.circular(10),
                                                                   child: Container(
-                                                                      
 
-                                                                    width: double.infinity,
 
-                                                                    alignment: Alignment.center,
-
-                                                                    child:Image.network("${mediaList[index].mediaLink}",
-                                                                      fit: BoxFit.fill,
                                                                       width: double.infinity,
-                                                                      height: double.infinity,
-                                                                    )
+
+                                                                      alignment: Alignment.center,
+
+                                                                      child:Image.network("${mediaList[index].mediaLink}",
+                                                                        fit: BoxFit.fill,
+                                                                        width: double.infinity,
+                                                                        height: double.infinity,
+                                                                      )
                                                                   ),
                                                                 ),
 
@@ -317,15 +354,13 @@ class _ShowRoomScreenState extends State<ShowRoomScreen> {
                                           ),
                                         ],
                                       );
-                                      /*return ListTile(
-                                    title: Text("${mediaList[index].screenId}"),
-                                  );*/
+
                                     } else {
                                       return SizedBox(
                                         height: 1,
                                       );
                                     }
-                                    ;
+
                                   })),
                           /* Expanded(
                             child: ListView(
