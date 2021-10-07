@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:showroom_front/login/login_screen.dart';
 import 'package:showroom_front/utils/shared_prefs_data.dart';
 
-ShowAlertDialog(BuildContext context){
+ShowAlertDialog(BuildContext context,String name){
 
 Widget Positive=TextButton(onPressed: (){
   logout(context);
@@ -16,8 +16,8 @@ Widget Negative=TextButton(onPressed: (){
 
 
 AlertDialog alert = AlertDialog(
-  title: Text("Notice"),
-  content: Text("Hey do you want to log out ?"),
+  title: Text("Hello  $name "),
+  content: Text("do you want to log out ?"),
   actions: [
     Negative,
     Positive,

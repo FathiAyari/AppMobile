@@ -19,7 +19,12 @@ class ShowRoomScreen extends StatefulWidget {
 }
 
 class _ShowRoomScreenState extends State<ShowRoomScreen> {
-  String formattedTime = DateFormat.jm().format(DateTime.now());
+
+
+  String formattedTime = DateFormat("HH:mm").format(DateTime.now());
+  int myMinute;
+  int myHour;
+
   String imageLink = "";
   int select;
   List test = [];
@@ -33,6 +38,8 @@ class _ShowRoomScreenState extends State<ShowRoomScreen> {
   @override
   void initState() {
     super.initState();
+     myHour =int.tryParse(formattedTime.split(":")[0]);
+    myMinute =int.tryParse(formattedTime.split(":")[1]);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _getScreenList();
@@ -60,8 +67,8 @@ class _ShowRoomScreenState extends State<ShowRoomScreen> {
         mediaList.add(media);
       });
       if (mediaList.isNotEmpty) {
-        startCarousel();
-        displayCurrentImage();
+       /* startCarousel();
+        displayCurrentImage();*/
       }
       setState(() {});
     });
@@ -84,13 +91,13 @@ class _ShowRoomScreenState extends State<ShowRoomScreen> {
     });
   }
 
-  startCarousel() {
+/*  startCarousel() {
     this.timer = Timer.periodic(Duration(minutes: 1), (Timer t) {
       displayCurrentImage();
     });
-  }
+  }*/
 
-  displayCurrentImage() {
+/*  displayCurrentImage() {
     this.mediaList.forEach((media) {
       TimeOfDay _startTime = TimeOfDay(
           hour: int.parse(media.startTime.split(":")[0]),
@@ -112,7 +119,7 @@ class _ShowRoomScreenState extends State<ShowRoomScreen> {
         });
       }
     });
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -161,7 +168,7 @@ class _ShowRoomScreenState extends State<ShowRoomScreen> {
                     ),
                     InkWell(
                         onTap: () async {
-                          ShowAlertDialog(context);
+                          ShowAlertDialog(context,user?.name);
                         },
                         child: Column(
                           children: [
@@ -215,6 +222,13 @@ class _ShowRoomScreenState extends State<ShowRoomScreen> {
 
                               this.selectedScreenId = value;
                               select = int.tryParse(value);
+                              formattedTime = DateFormat("HH:mm").format(DateTime.now());
+                               myHour=int.tryParse(formattedTime.split(":")[0]);
+                               myMinute=int.tryParse(formattedTime.split(":")[1]);
+                               print(myHour);
+
+
+
 
                             });
                           },
@@ -224,159 +238,37 @@ class _ShowRoomScreenState extends State<ShowRoomScreen> {
                   ),
                 ],
               ),
-
+              SizedBox(height: 30,),
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CachedNetworkImage(
-                      height: MediaQuery.of(context).size.height * 0.7,
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      fit: BoxFit.contain,
-                      imageUrl: this.imageLink,
-                      placeholder: (context, url) =>
-                          CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => Column(
-                        children: [
+                    Expanded(
+                        child: ListView.builder(
+                            itemCount: mediaList.length,
+                            itemBuilder: (context, index) {
+                              int mediaStartMunite= int.tryParse((mediaList[index].startTime).split(":")[1]) ;
+                              int mediaStartHour= int.tryParse((mediaList[index].startTime).split(":")[0]) ;
+                              int mediaEndMunite= int.tryParse((mediaList[index].endTime).split(":")[1]) ;
+                              int mediaEndHour= int.tryParse((mediaList[index].endTime).split(":")[0]) ;
+                              if ((mediaList[index].screenId == select && myHour> mediaStartHour && myHour<mediaEndHour)||((myHour==mediaStartHour) && myMinute>mediaStartMunite && (myMinute<mediaEndMunite)&& mediaList[index].screenId == select)) {
 
-                          /*Text("${selectedScreenId}",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: FONT_POPPINS_MEDIUM,
-                                  fontSize: 13)),
-                          ElevatedButton(
-                              onPressed: () {
-                                setState(() {
-                                  setState(() {});
-                                });
-                              },
-                              child: Text("get data")),
-                          StreamBuilder(
-                            stream: FirebaseFirestore.instance
-                                .collection('car')
-                                .snapshots(),
-                            builder: (BuildContext context, snapshot) {
-                              if (!snapshot.hasData) {
-                                return Text("loading");
+
+
+
+
+
+
+
+                                return Content(mediaList: mediaList,index:index);
+
+                              } else {
+                                return SizedBox(
+                                  height: 1,
+                                );
                               }
-                              return Container(
-                                child: snapshot.data.docs[0]['brand'] == "123"
-                                    ? Text("test")
-                                    : Text(snapshot.data.docs[0]['brand']),
-                              );
-                            },
-                          ),*/
-                          Expanded(
-                              child: ListView.builder(
-                                  itemCount: mediaList.length,
-                                  itemBuilder: (context, index) {
-                                    if ((mediaList[index].screenId == select)) {
-                                        String mediaTime= (mediaList[index].startTime).split(":")[0] ;
-                                        int singleTime=int.tryParse(mediaTime);
 
-
-
-
-
-
-
-                                      return Column(
-                                        children: [
-                                          SizedBox(
-                                            height: 30,
-                                          ),
-                                          Container(
-                                            height: 220,
-                                            width: double.infinity,
-
-                                            child: Stack(
-                                              children: [
-                                                Card(
-
-                                                  shape:
-                                                  RoundedRectangleBorder(
-                                                    side: BorderSide(
-                                                        color:
-                                                        Colors.white70,
-                                                        width: 1),
-                                                    borderRadius:
-                                                    BorderRadius
-                                                        .circular(10),
-                                                  ),
-                                                  elevation: 10,
-                                                  child: Row(
-
-                                                    children: [
-
-
-
-                                                      Expanded(
-                                                        child: Container(
-
-                                                          child: Column(
-
-
-
-                                                            children: [
-                                                              Expanded(
-                                                                child: ClipRRect(
-                                                                  borderRadius: BorderRadius.circular(10),
-                                                                  child: Container(
-
-
-                                                                      width: double.infinity,
-
-                                                                      alignment: Alignment.center,
-
-                                                                      child:Image.network("${mediaList[index].mediaLink}",
-                                                                        fit: BoxFit.fill,
-                                                                        width: double.infinity,
-                                                                        height: double.infinity,
-                                                                      )
-                                                                  ),
-                                                                ),
-
-                                                              ),
-
-
-
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-
-                                              ],
-                                            ),
-
-                                          ),
-                                        ],
-                                      );
-
-                                    } else {
-                                      return SizedBox(
-                                        height: 1,
-                                      );
-                                    }
-
-                                  })),
-                          /* Expanded(
-                            child: ListView(
-                              children:mediaList.map((e) {
-                                if(e.screen_id==4){
-                                    return ListTile(
-                                    title: Text("${e.screenId}"),
-                                  );
-                                }
-                               ;
-                              }).toList(),
-                            ),
-                          ),*/
-                        ],
-                      ),
-                    )
+                            })),
                   ],
                 ),
               ),
@@ -392,5 +284,94 @@ class _ShowRoomScreenState extends State<ShowRoomScreen> {
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
       return LoginScreen();
     }));
+  }
+}
+
+class Content extends StatelessWidget {
+  const Content({
+    Key key,
+    @required this.mediaList,
+    @required this.index,
+  }) : super(key: key);
+
+  final List mediaList;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(
+          height: 30,
+        ),
+        Container(
+          height: 200,
+          width: double.infinity,
+
+          child: Stack(
+            children: [
+              Card(
+
+                shape:
+                RoundedRectangleBorder(
+                  side: BorderSide(
+                      color:
+                      Colors.white70,
+                      width: 1),
+                  borderRadius:
+                  BorderRadius
+                      .circular(10),
+                ),
+                elevation: 10,
+                child: Row(
+
+                  children: [
+
+
+
+                    Expanded(
+                      child: Container(
+
+                        child: Column(
+
+
+
+                          children: [
+                            Expanded(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Container(
+
+
+                                    width: double.infinity,
+
+                                    alignment: Alignment.center,
+
+                                    child:Image.network("${mediaList[index].mediaLink}",
+                                      fit: BoxFit.fill,
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                    )
+                                ),
+                              ),
+
+                            ),
+
+
+
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+            ],
+          ),
+
+        ),
+      ],
+    );
   }
 }

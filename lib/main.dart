@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
 
         primarySwatch: Colors.blue,
       ),
-      home:out!=0?Onboarding():LoginScreen()
+      home:out!=0?Onboarding():SplashScreen()
 
     );
   }
