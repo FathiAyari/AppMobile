@@ -226,6 +226,7 @@ class _ShowRoomScreenState extends State<ShowRoomScreen> {
                                myHour=int.tryParse(formattedTime.split(":")[0]);
                                myMinute=int.tryParse(formattedTime.split(":")[1]);
                                print(myHour);
+                               print(myMinute);
 
 
 
@@ -251,8 +252,11 @@ class _ShowRoomScreenState extends State<ShowRoomScreen> {
                               int mediaStartHour= int.tryParse((mediaList[index].startTime).split(":")[0]) ;
                               int mediaEndMunite= int.tryParse((mediaList[index].endTime).split(":")[1]) ;
                               int mediaEndHour= int.tryParse((mediaList[index].endTime).split(":")[0]) ;
-                              if ((mediaList[index].screenId == select && myHour> mediaStartHour && myHour<mediaEndHour)||((myHour==mediaStartHour) && myMinute>mediaStartMunite && (myMinute<mediaEndMunite)&& mediaList[index].screenId == select)) {
-
+                                  if ((mediaList[index].screenId == select && myHour> mediaStartHour && myHour<mediaEndHour) ||
+                                      (myHour==mediaStartHour && myMinute> mediaStartMunite && myHour< mediaEndHour && mediaList[index].screenId == select)||
+                                      (myHour==mediaEndHour && myMinute<mediaEndMunite && myMinute>mediaStartMunite&&myHour== mediaStartHour && mediaList[index].screenId == select)||
+                                      (myHour==mediaEndHour && myMinute<mediaEndMunite && myHour> mediaStartHour && mediaList[index].screenId == select)
+                                  ) {
 
 
 
@@ -263,6 +267,7 @@ class _ShowRoomScreenState extends State<ShowRoomScreen> {
                                 return Content(mediaList: mediaList,index:index);
 
                               } else {
+
                                 return SizedBox(
                                   height: 1,
                                 );
